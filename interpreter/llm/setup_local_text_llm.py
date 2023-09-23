@@ -75,7 +75,11 @@ def setup_local_text_llm(interpreter):
 
     # Third stage: GPU confirm
     if confirm_action("Use GPU? (Large models might crash on GPU, but will run more quickly)"):
-      n_gpu_layers = -1
+      tmp_ngl = input_number_action("All Layers offload to GPU? (blank=all)", "")
+      if str.isdigit(tmp_ngl):
+        n_gpu_layers = int(tmp_ngl)
+      else:
+        n_gpu_layers = -1
     else:
       n_gpu_layers = 0
 
@@ -386,6 +390,16 @@ def confirm_action(message):
 
     answers = inquirer.prompt(question)
     return answers['confirm']
+
+def input_number_action(message, default):
+    question = [
+        inquirer.Text('ngl',
+                      message=message,
+                      default=default),
+    ]
+
+    answers = inquirer.prompt(question)
+    return answers['ngl']
 
 
 
